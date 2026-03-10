@@ -1,4 +1,4 @@
-       const { useState, useEffect, useMemo, useRef } = React;
+   const { useState, useEffect, useMemo, useRef } = React;
 
         const kebabToPascal = (str) =>
             str.replace(/-([a-z0-9])/g, (g) => g[1].toUpperCase())
@@ -49,6 +49,8 @@
 
         // --- CONSTANTS ---
         const MACRO_URL = "https://script.google.com/macros/s/AKfycbx5Go-UGIcQvyA3vefhhl5Rc6-930cG9LsCRb1JPKzTHN5dNfBUCsD063K5RCyANGplEA/exec";
+        
+        // AVISO: Se você criou uma nova implantação (deploy) com o código do novo macro, substitua a URL abaixo!
         const MACRO_RETIFICACAO_URL = "https://script.google.com/macros/s/AKfycbxBKVSbhnYwFXJfKFAPKj0_qMF0P2pvYq_SOXD4XHQGIJkkSHtyMPmdOesP-KUSVZx0jw/exec";
         
         // Configurações de API do Cloudflare Worker
@@ -85,7 +87,6 @@
                         currentCell += char;
                     }
                 } else {
-                    // SÓ ENTRA EM MODO DE ASPAS SE FOR O PRIMEIRO CARACTERE DA CÉLULA
                     if (char === '"' && currentCell.trim() === '') {
                         inQuotes = true;
                     } else if (char === '\t') {
@@ -221,20 +222,17 @@
             }
         };
 
+        // --- ATUALIZAÇÃO: Função Ajustada para as Retificações ---
         const postRectificationToSheet = async (dataPayload) => {
             try {
-                const body = { action: "append_row", gid: "0", data: dataPayload };
+                // Adicionamos a GID requerida para que o Macro garanta a inserção na aba correta.
+                const body = { action: "append_row", gid: "240140981", data: dataPayload };
                 const response = await fetch(MACRO_RETIFICACAO_URL, {
                     method: 'POST',
-                    // A mudança chave: Remover o "headers: {'Content-Type': 'application/json'}" 
-                    // e substituí-lo por text/plain ou remover totalmente para usar a diretiva 'no-cors' se necessário
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
                     body: JSON.stringify(body)
                 });
                 
-                // Se estiver a dar erro CORS, o ideal é não esperar pelo response.ok
-                // O Google Scripts pode retornar um código de redirecionamento (302) que o fetch bloqueia
-                // O ideal é apenas verificar se o processo passou sem erros críticos
                 return true; 
             } catch (error) {
                 throw error;
@@ -329,7 +327,6 @@
                 }
             }, [studentList, isAdminActivity]);
 
-            // Handle clicking outside custom dropdown to close it
             useEffect(() => {
                 const handleClickOutside = (event) => {
                     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -441,7 +438,6 @@
                                 <div className="space-y-2 sm:space-y-3">
                                     <label className="text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Aula/Curso</label>
                                     
-                                    {/* Custom Dropdown / Hyperlink selector */}
                                     <div className="relative" ref={dropdownRef}>
                                         <a 
                                             href="#selecionar-aula"
