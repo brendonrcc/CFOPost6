@@ -1,4 +1,4 @@
- const { useState, useEffect, useMemo, useRef } = React;
+const { useState, useEffect, useMemo, useRef } = React;
 
         const kebabToPascal = (str) =>
             str.replace(/-([a-z0-9])/g, (g) => g[1].toUpperCase())
@@ -1161,6 +1161,7 @@
 
             const [students, setStudents] = useState('');
             const [isSending, setIsSending] = useState(false);
+            const [sendProgress, setSendProgress] = useState('');
             
             const [templates, setTemplates] = useState([]);
             const [isLoadingTemplates, setIsLoadingTemplates] = useState(true);
@@ -1294,6 +1295,7 @@
                 }
 
                 setIsSending(true);
+                setSendProgress('');
                 let successCount = 0;
                 let failCount = 0;
                 let failedNicks = [];
@@ -1307,13 +1309,18 @@
                 try {
                     for (let i = 0; i < studentList.length; i++) {
                         const recipient = studentList[i];
+                        setSendProgress(`(${i + 1}/${studentList.length}) A enviar para ${recipient}...`);
+                        
                         try {
                             const success = await sendPrivateMessage(recipient, subject, messageBody);
                             if (success) successCount++; else { failCount++; failedNicks.push(recipient); }
                         } catch (e) { failCount++; failedNicks.push(recipient); }
 
                         if (i < studentList.length - 1) {
-                            await delay(1000);
+                            for (let s = 10; s > 0; s--) { 
+                                setSendProgress(`Aguardando... ${s}s`); 
+                                await delay(1000); 
+                            }
                         }
                     }
 
@@ -1329,6 +1336,7 @@
                     addToast('error', 'Erro', `Erro: ${error.message}`);
                 } finally {
                     setIsSending(false);
+                    setSendProgress('');
                 }
             };
 
@@ -1467,7 +1475,7 @@
                                 {isSending ? (
                                     <span className="flex items-center justify-center gap-1.5 sm:gap-2">
                                         <Loader2 size={16} className="animate-spin sm:w-5 sm:h-5" />
-                                        <span>A enviar...</span>
+                                        <span className="truncate">{sendProgress || 'A enviar...'}</span>
                                     </span>
                                 ) : (
                                     <span className="flex items-center justify-center gap-1.5 sm:gap-2">
