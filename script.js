@@ -50,7 +50,7 @@
         const MACRO_URL = "https://script.google.com/macros/s/AKfycbx5Go-UGIcQvyA3vefhhl5Rc6-930cG9LsCRb1JPKzTHN5dNfBUCsD063K5RCyANGplEA/exec";
         
         // NOVO URL CONFIGURADO PARA RETIFICAÇÕES:
-        const MACRO_RETIFICACAO_URL = "https://script.google.com/macros/s/AKfycbwykpnxxAe7SDM0yKXZmPWpg0wDByBiNSj5f28kIOxOR0yxczvXJaDqE78X819jIy99mA/exec";
+        const MACRO_RETIFICACAO_URL = "https://script.google.com/macros/s/AKfycbwZAesW7xYMAjW9R10mZe8t1jkBDsIyIjCkEuyl2vhrP9A7dJXOEURHcdWddtQ6n8rD-g/exec";
         
         const MACRO_GET_MPS_URL = "https://api-professor-dashboard.brendonhbrcc.workers.dev/?gid=2116872062";
         const MACRO_AUTH_URL = "https://api-professor-dashboard.brendonhbrcc.workers.dev/?gid=1512246214";
